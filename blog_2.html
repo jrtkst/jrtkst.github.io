@@ -121,11 +121,93 @@
 		<p style="font-size: 100%;color: black;">
 			Instead of having the bifurcation parameters grows slowly and have the root finding algorithm to find a solution, we can instead walking along the path to 
 			form the bifurcation diagram. In other words, instead of having the equation parametrized by the bifurcation parameter it will be parametrized by the curve's arc length.
-			The continuation algorithm can be implemented as follow:
+			
+
 			<br>
 			Consider a function \(\textbf{F} : \mathbb{R}^n \to \mathbb{R}^n\) with fixed point \(\textbf{x}\in \mathbb{R}^n\) and bifurcation parameter \(\mu \in \mathbb{R}\). Assume
-			\(\textbf{x}\) and \(\mu\) to both be parametrized by the arc-length \(s\). 
-			Thus we have \(\textbf{F}(\textbf{x}(s);\mu(s))=0\) for all \(s\). 
+			\(\textbf{x}\) and \(\mu\) to both be parametrized by the arc-length \(s\), so that \(\textbf{F}(\textbf{x}(s);\mu(s))=0\) for all \(s\). 
+			
+			
+			<br>
+			Let \(s_0\) an initial known fixed point. 
+			The main idea is to extrapolate a distance \(\Delta s = s-s_0\) from the known fixed point \((\textbf{x}(s_0), \mu(s_0))\), along the tangent \(\tau\) in the \((\textbf{x},\mu)\)
+			space, 
+			$$
+			\tau = \left(\dot{\textbf{x}}(s), \dot{\mu}(s)\right) = \left(\dfrac{d\textbf{x}(s)}{ds}, \dfrac{d\mu(x)}{ds}\right)
+			$$
+			as a prediction and then perform Newton iterations to correct that prediction in order to get back onto the branch, but staying on the plane perpendicular
+			to \(\tau\) at a distance \(\Delta s\). Since \(\textbf{x}(s), \mu(s)\) satisfies \(\textbf{F}(\textbf{x}(s), \mu(s))=0\) for all \(s\), the tanget vector \(\tau\)
+			satisfies 
+			$$
+			0 = \dfrac{d}{ds}\textbf{F}(\textbf{x}(s), \mu(s)) = \textbf{F}_{\textbf{x}}\dot{\textbf{x}}^t + \textbf{F}_{\mu}\dot{\mu} = \left(\textbf{F}_{\textbf{x}}\mid \textbf{F}_\mu\right)\begin{bmatrix}\dot{\textbf{x}}^t \\ \dot{\mu}\end{bmatrix}
+			$$
+			
+			Well the math is quite.. hefty (<i>nguli</i>), but the continuation algorithm can be implemented as follow:
+
+			<ol style="color:black">
+				<li>
+					At the current value \(s_k\) of \(s_{k+1}\) determine \(\tau\). First solve for \(\textbf{z}\) from
+					$$
+					\textbf{F}_{\textbf{x}}^{(0)}\textbf{z} = - \textbf{F}_{\tau}^{(0)}
+					$$
+					and setting 
+					$$
+						\tau = \left(\tau_{\textbf{x}}^{(0)}, \tau_{\mu}^{(0)}\right) = \pm \dfrac{1}{\sqrt{\textbf{z}^t\textbf{z}+1}}\left(\textbf{z}^t, 1\right)
+					$$
+					with the sign above is chosen such that the orientation of \(\tau\) is close to the tangent vector \(\tau_{previous}\) at the previous value of \(s\).
+					In other words, we require that \(\tau\tau_{previous}^t>0\). This allows \(\mu\) to pass through an extremum as the branch is followed around a bifurcation
+					point. Solving the \(\textbf{z}\) assumes \(\textbf{F}_{\textbf{x}}^{(0)}\) is nonsingular, which is the case except right at the bifurcation point 
+					(which is super rare)
+				</li>
+				<li>
+					Increment the arclength parameter by \(\Delta s\), and determine \(\textbf{x}(s_{k+1}), \mu(s_{k+1})\) by Newton iteration. For \(k\geq 1\),
+					$$
+						\left(\textbf{x}_{k+1}, \mu_{k+1}\right)=\left(\textbf{x}_{k}, \mu_{k}\right) + \left(\Delta \textbf{x}, \Delta \mu\right) 
+					$$
+					until converges, where
+					$$
+						\begin{bmatrix} 
+						\textbf{F}_{\textbf{x}}(\textbf{x}^{(k)}, \mu_k) & \textbf{F}_{\mu}(\textbf{x}^{(k)}, \mu_k)\\
+						\tau_{\textbf{x}}^{(0)} & \tau_{\mu}^{(0)}
+						\end{bmatrix}
+						\begin{bmatrix} 
+						\Delta \textbf{x}\\
+						\Delta \mu
+						\end{bmatrix}
+						=-
+						\begin{bmatrix} 
+						\textbf{F}_{\textbf{x}}(\textbf{x}^{(k)}, \mu_k) \\
+						\tau_{\textbf{x}}^{(0)}(\textbf{x}^{(k)}-\textbf{x}^{(0)})^t  + \tau_{\mu}^{(0)}(\mu_k-\mu_0) - \Delta s
+						\end{bmatrix}
+					$$
+				</li>
+			</ol>
+		</p>
+
+		<h3>Example</h3>
+		<p style="font-size: 100%;color: black;">
+			Observe a system of two nonlinear differential equation below:
+			$$
+			\begin{align}
+				\dfrac{dE}{dt} &= -E + (k_e - r_e E)S_e(c_1 E - c_2 I + P), \\
+				\dfrac{dI}{dt} &= -I + (k_i - r_i I) S_i (c_3 E - c_4 I + Q),
+			\end{align}
+			$$
+			<br>
+			In this example, the observable values are the steady state values of the system \(E_0+I_0\) while the bifurcation parameter is \(P\). Observe the animation shown on the very first figure in this page.
+			That is the animation of the system's phase portrait for varying \(P\). At certain point we can see the formation of an orbit, thus signifies the presence of a bifurcation (precisely, a Hopf birfurcation).
+			The result is given below:
+			<figure style="text-align: center;">
+				<img src="images/steady_state_diagram.png" atl="" style="width:40%;">
+				<figcaption>
+					Steady state diagram for the problem above.
+				</figcaption>
+			</figure>
+		</p>
+		<p style="font-size: 100%;color: black;">
+			The stability for each coordinates of the bifurcation diagram can be determined by using the linearized Jacobian. 
+			You can check out the program used to produce the diagram in this <a href="https://github.com/jrtkst/sysdyn">repository</a>. I probably will write a Python package for 
+			bifurcation diagram plotting in the future (that also supports more advanced feature like branch switching!). Have fun mathing, mate.
 			<br>
 			<br>
 		</p>

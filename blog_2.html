@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>Gabriel Jonathan | Works</title>
+		<title>On Numerical Continuation</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -89,7 +89,7 @@
 					<img src="images/bif_sketch.png" atl="" style="width:35%;">
 					<figcaption>
 						Bifurcation diagram sketch. We have 0 equilibrium point if \(\mu<0\),
-						one equilibria appeared if \(\mu=0\) and there are two if \(\mu>0\).
+						one equilibria appears if \(\mu=0\) and there are two if \(\mu>0\).
 					</figcaption>
 				</figure>
 			</p>
@@ -101,11 +101,35 @@
 			</p>
 		<h3>So what's the big deal?</h3>
 		<p style="font-size: 100%;color: black;">
-			
+			Well, the thing is, plotting a bifurcation diagram is super difficult for several reason. Conventional root finding algorithm will struggle on finding
+			all roots from a single equation. Finding <i>all</i> solutions will be computationally expensive and difficult.
+			The algorithm will perform smoothly until it hits a bifurcation point, and they will get "confused" as there are two paths to follow now instead of one (or no path at all).
+			<figure style="text-align: center;">
+				<img src="images/illus1.png" atl="" style="width:75%;">
+			</figure>
+			<figure style="text-align: center;">
+				<img src="images/illus2.png" atl="" style="width:75%;">
+				<figcaption>
+					Conventional root finding algorithm struggle as it passes a bifurcation point, illustrated.
+				</figcaption>
+			</figure>
 			<br>
 			<br>
 		</p>
-			
+
+		<h2>Solution: Pseudo Arc-length Continuation</h3>
+		<p style="font-size: 100%;color: black;">
+			Instead of having the bifurcation parameters grows slowly and have the root finding algorithm to find a solution, we can instead walking along the path to 
+			form the bifurcation diagram. In other words, instead of having the equation parametrized by the bifurcation parameter it will be parametrized by the curve's arc length.
+			The continuation algorithm can be implemented as follow:
+			<br>
+			Consider a function \(\textbf{F} : \mathbb{R}^n \to \mathbb{R}^n\) with fixed point \(\textbf{x}\in \mathbb{R}^n\) and bifurcation parameter \(\mu \in \mathbb{R}\). Assume
+			\(\textbf{x}\) and \(\mu\) to both be parametrized by the arc-length \(s\). 
+			Thus we have \(\textbf{F}(\textbf{x}(s);\mu(s))=0\) for all \(s\). 
+			<br>
+			<br>
+		</p>
+
 
 	</article>
 

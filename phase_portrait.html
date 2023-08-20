@@ -38,7 +38,7 @@
             Simple app to generate phase portrait from differential equations of the form \(\frac{dx}{dt}=f(x,y), \frac{dy}{dt}=g(x,y)\).
         </p>
         <!-- Input -->
-        <form onsubmit="return false" action="">
+        <form id="params" onsubmit="return false">
             <!-- Functions -->
             <div class="row">
                 <!-- f(x,y) -->
@@ -113,8 +113,9 @@
                 </div>
             </div>
             <br>
-            <input type="submit" value="Generate">
+            <!-- <input type="submit" value="Generate"> -->
         </form>
+        <button type="submit" form="params" onclick="generate()">Generate</button>
         
     </article>
     

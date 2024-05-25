@@ -1,0 +1,240 @@
+<!DOCTYPE HTML>
+<!--
+	Miniport by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>On Numerical Continuation</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="icon" href="images/icons8-sigma-64.ico">
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	</head>
+	<body class="is-preload">
+
+    <!-- Nav -->
+	<nav id="nav">
+		<ul class="navhome">
+			<li><a href="index.html">Gabriel Jonathan</a></li>
+		</ul>
+		<ul class="container">
+			<li><a href="profile.html">Profile</a></li>
+			<li><a href="works.html">Works</a></li>
+            <li><a href="blog.html">Blog</a></li>
+		</ul>
+	</nav>
+
+    <!-- Content -->
+    <article id="top2">
+        <center>
+            <h1 style="padding:2% 5%;"><strong>On Numerical Continuation</strong></h1>
+			<h4 style="font-weight: 600;color:grey">July 15, 2023</h4>
+        </center>        
+    </article>
+
+	<article id="top" style="padding:3% 10%">
+		<h2>What is that?</h2>
+			<p style="font-size: 100%;color: black;">
+				During my study at ITB,  I took the Dynamical System course twice. The first was at my bachelor (as <strong>Introduction to Dynamical System</strong>) 
+				and the second during my master (as <strong>Dynamical System</strong>). Both courses are very similar and they have one thing in common: the use of Numerical Continuation. 
+				My biggest regret is that I did not really pay attention to it when I took the course for the first time because I thought it was just not very interesting. (I was wrong)
+				<h4><center>Wait.. what the heck is continuation?? and Bifurcation??</center></h4>
+			</p>
+
+			<p style="font-size: 100%;color: black;">
+				<figure style="text-align: center;">
+					<img src="images/bifurcation_animation.gif" atl="" style="object-fit: scale-down;max-width:100%;width:550px;">
+					<figcaption>Bifurcation in action.</figcaption>
+				</figure>
+			</p>
+
+		<h2>Bifurcation</h2>
+			<p style="font-size: 100%;color: black;">
+				Bifurcation in general means <i>the point or area at which something divides into two branches or parts</i>. In mathematics lore, Bifurcation Theory is the mathematical 
+				study of changes in the qualitative or topological structure of a given family of curves, such as the integral curves of a family of vector fields, and the solutions 
+				of a family of differential equations.
+				<br>
+				<br>
+				In short, 
+				<i>
+					<center style="font-size: 100%;color: black;">
+						Bifurcation occurs when a small change in certain parameters corresponding to a curve causes a sudden qualitative/form behavior to that curve
+					</center>
+				</i>
+			</p>
+			<p style="font-size: 100%;color: black;">
+				Now, consider a nonlinear differential equation below:
+				$$
+				\dot{x} = x^2-\mu
+				$$
+				
+				We will refer to the parameter \(\mu\) as <strong>bifurcation parameters</strong>.
+				The equilibrium point for the differential equation above will be set of all solution \(x\) such that \(\dot{x}=0\).
+				<br>
+				For \(\mu=0\), the set of equilibrium point will be \(\{0\}\). If \(\mu=1\), there are no equilibrium point (thus the set of equilibria is \(\{\}\)) and when \(\mu=-1\) 
+				it will be \(\{-1, 1\}\). Notice that as the value of \(\mu\) varies, the number of equlibrium points also change. 
+				<br>
+				<br>
+				<strong>The bifurcation diagram </strong> the graph showing all the observed
+				values (in this case it's the equilibrium points, but it also could be periodic orbits or chaotic attractors) as a function of the bifurcation parameter. 
+				Hence, the bifurcation diagram sketch for the problem above may be shown as:
+				<figure style="text-align: center;">
+					<img class="image" src="images/bif_sketch.png" atl="" style="object-fit: scale-down;max-width:100%;width:70%;">
+					<figcaption>
+						Bifurcation diagram sketch. We have 0 equilibrium point if \(\mu<0\),
+						one equilibria appears if \(\mu=0\) and there are two if \(\mu>0\).
+					</figcaption>
+				</figure>
+			</p>
+			<p style="font-size: 100%;color: black;">
+				We can observe that the "branching" phenomenon occured at \(\mu=0\), and we call it the bifurcation point. As mentioned above, there are also commonly observable values
+				other than fixed points such as: chaotic attractors, periodic orbits occurrence, etc.
+				<br>
+				<br>
+			</p>
+		<h3>So what's the big deal?</h3>
+		<p style="font-size: 100%;color: black;">
+			Well the thing is, plotting a bifurcation diagram is super difficult for several reason. Conventional root finding algorithm will struggle on finding
+			all roots from a single equation. Finding <i>all</i> solutions will be computationally expensive and difficult.
+			The algorithm will perform smoothly until it hits a bifurcation point, and it will get "confused" as there are two paths to follow now instead of one (or no path at all).
+			<figure style="text-align: center;">
+				<img src="images/illus1.png" atl="" style="object-fit: scale-down;max-width:100%;width:100%;">
+			</figure>
+			<figure style="text-align: center;">
+				<img src="images/illus2.png" atl="" style="object-fit: scale-down;max-width:100%;width:100%;">
+				<figcaption>
+					Conventional root finding algorithm struggle as it passes a bifurcation point, illustrated.
+				</figcaption>
+			</figure>
+			<br>
+			<br>
+		</p>
+
+		<h2>Solution: Pseudo Arc-length Continuation</h3>
+		<p style="font-size: 100%;color: black;">
+			Instead of having the bifurcation parameters grows slowly and have the root finding algorithm to find a solution, we can instead walking along the path to 
+			form the bifurcation diagram. In other words, instead of having the equation parametrized by the bifurcation parameter it will be parametrized by the curve's arc length.
+			
+
+			<br>
+			Consider a function \(\textbf{F} : \mathbb{R}^n \to \mathbb{R}^n\) with fixed point \(\textbf{x}\in \mathbb{R}^n\) and bifurcation parameter \(\mu \in \mathbb{R}\). Assume
+			\(\textbf{x}\) and \(\mu\) to both be parametrized by the arc-length \(s\), so that \(\textbf{F}(\textbf{x}(s);\mu(s))=0\) for all \(s\). 
+			
+			
+			<br>
+			Let \(s_0\) an initial known fixed point. 
+			The main idea is to extrapolate a distance \(\Delta s = s-s_0\) from the known fixed point \((\textbf{x}(s_0), \mu(s_0))\), along the tangent \(\tau\) in the \((\textbf{x},\mu)\)
+			space, 
+			$$
+			\tau = \left(\dot{\textbf{x}}(s), \dot{\mu}(s)\right) = \left(\dfrac{d\textbf{x}(s)}{ds}, \dfrac{d\mu(x)}{ds}\right)
+			$$
+			as a prediction and then perform Newton iterations to correct that prediction in order to get back onto the branch, but staying on the plane perpendicular
+			to \(\tau\) at a distance \(\Delta s\). Since \(\textbf{x}(s), \mu(s)\) satisfies \(\textbf{F}(\textbf{x}(s), \mu(s))=0\) for all \(s\), the tanget vector \(\tau\)
+			satisfies 
+			$$
+			0 = \dfrac{d}{ds}\textbf{F}(\textbf{x}(s), \mu(s)) = \textbf{F}_{\textbf{x}}\dot{\textbf{x}}^t + \textbf{F}_{\mu}\dot{\mu} = \left(\textbf{F}_{\textbf{x}}\mid \textbf{F}_\mu\right)\begin{bmatrix}\dot{\textbf{x}}^t \\ \dot{\mu}\end{bmatrix}
+			$$
+			
+			Well the math is quite.. hefty (<i>nguli</i>), but the continuation algorithm can be implemented as follow:
+
+			<ol style="color:black">
+				<li>
+					At the current value \(s_k\) of \(s_{k+1}\) determine \(\tau\). First solve for \(\textbf{z}\) from
+					$$
+					\textbf{F}_{\textbf{x}}^{(0)}\textbf{z} = - \textbf{F}_{\tau}^{(0)}
+					$$
+					and setting 
+					$$
+						\tau = \left(\tau_{\textbf{x}}^{(0)}, \tau_{\mu}^{(0)}\right) = \pm \dfrac{1}{\sqrt{\textbf{z}^t\textbf{z}+1}}\left(\textbf{z}^t, 1\right)
+					$$
+					with the sign above is chosen such that the orientation of \(\tau\) is close to the tangent vector \(\tau_{previous}\) at the previous value of \(s\).
+					In other words, we require that \(\tau\tau_{previous}^t>0\). This allows \(\mu\) to pass through an extremum as the branch is followed around a bifurcation
+					point. Solving the \(\textbf{z}\) assumes \(\textbf{F}_{\textbf{x}}^{(0)}\) is nonsingular, which is the case except right at the bifurcation point 
+					(which is super rare)
+				</li>
+				<li>
+					Increment the arclength parameter by \(\Delta s\), and determine \(\textbf{x}(s_{k+1}), \mu(s_{k+1})\) by Newton iteration. For \(k\geq 1\),
+					$$
+						\left(\textbf{x}_{k+1}, \mu_{k+1}\right)=\left(\textbf{x}_{k}, \mu_{k}\right) + \left(\Delta \textbf{x}, \Delta \mu\right) 
+					$$
+					until converges, where
+					$$
+						\begin{bmatrix} 
+						\textbf{F}_{\textbf{x}}(\textbf{x}^{(k)}, \mu_k) & \textbf{F}_{\mu}(\textbf{x}^{(k)}, \mu_k)\\
+						\tau_{\textbf{x}}^{(0)} & \tau_{\mu}^{(0)}
+						\end{bmatrix}
+						\begin{bmatrix} 
+						\Delta \textbf{x}\\
+						\Delta \mu
+						\end{bmatrix}
+						=-
+						\begin{bmatrix} 
+						\textbf{F}_{\textbf{x}}(\textbf{x}^{(k)}, \mu_k) \\
+						\tau_{\textbf{x}}^{(0)}(\textbf{x}^{(k)}-\textbf{x}^{(0)})^t  + \tau_{\mu}^{(0)}(\mu_k-\mu_0) - \Delta s
+						\end{bmatrix}
+					$$
+				</li>
+			</ol>
+		</p>
+
+		<h3>Example</h3>
+		<p style="font-size: 100%;color: black;">
+			Observe a system of two nonlinear differential equation below:
+			$$
+			\begin{align}
+				\dfrac{dE}{dt} &= -E + (k_e - r_e E)S_e(c_1 E - c_2 I + P), \\
+				\dfrac{dI}{dt} &= -I + (k_i - r_i I) S_i (c_3 E - c_4 I + Q),
+			\end{align}
+			$$
+			<br>
+			In this example, the observable values are the steady state values of the system \(E_0+I_0\) while the bifurcation parameter is \(P\). Observe the animation shown on the very first figure in this page.
+			That is the animation of the system's phase portrait for varying \(P\). At certain point we can see the formation of an orbit, thus signifies the presence of a bifurcation (precisely, a Hopf birfurcation).
+			The result is given below:
+			<figure style="text-align: center;">
+				<img src="images/steady_state_diagram.png" atl="" style="object-fit: scale-down;max-width:100%;width:55%;">
+				<figcaption>
+					Steady state diagram for the problem above.
+				</figcaption>
+			</figure>
+		</p>
+		<p style="font-size: 100%;color: black;">
+			The stability for each coordinates of the bifurcation diagram can be determined by using the linearized Jacobian. 
+			You can check out the program used to produce the diagram in this <a href="https://github.com/jrtkst/sysdyn">repository</a>. I will probably write a Python script for
+			bifurcation diagram plotting in the future (that also supports more advanced feature like branch switching, probably). 
+			<br>
+			<br>
+			<br>
+			<br>
+		</p>
+
+
+	</article>
+
+
+    
+
+
+   	<!-- Bottom Footer -->
+	<div class="navbar">
+		<a href="https://www.instagram.com/jrtkst/" class="icon brands fa-instagram"><span></span></a>
+		<a href="mailto:gabejonathan29@gmail.com" class="icon regular fa-envelope"></a>
+		<a href="https://jrtkst.github.io/Resume_Gab.pdf" class="icon"><span style="font-weight: 700;font-size:125%">CV</span></a>
+		<a href="https://www.linkedin.com/in/gabriel-jonathan/" class="icon brands fa-linkedin-in"><span class="label">LinkedIn</span></a>
+		<a href="https://github.com/jrtkst" class="icon brands fa-github"><span class="label">Github</span></a>
+	</div>
+		
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

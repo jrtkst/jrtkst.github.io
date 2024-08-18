@@ -2506,3 +2506,38 @@ input, select, textarea {
 	input[type="checkbox"] {
 		appearance: checkbox !important;
 	}
+
+	code {
+		font-family: Consolas,"courier new";
+		color: rgb(20, 27, 220);
+		background-color: #f1f1f1;
+		padding: 2px;
+		font-size: 105%;
+	}
+
+	.minibox {
+		background-color: rgb(150, 196, 230);
+		padding: 1rem 1rem;
+		border-radius:10px;
+	}
+
+	table {
+		border-collapse: collapse;
+		width: 100%;
+	  }
+	  
+	  td, th {
+		border: 1px solid #dddddd;
+		text-align: left;
+		padding: 8px;
+	  }
+	  
+	  tr:nth-child(even) {
+		background-color: #dddddd;
+	  }
+
+	@media screen and (max-width: 480px) {
+		img {
+			 width: 100%;
+		}
+	}

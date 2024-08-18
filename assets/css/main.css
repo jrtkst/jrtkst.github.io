@@ -2540,4 +2540,7 @@ input, select, textarea {
 		img {
 			 width: 100%;
 		}
+		p, li, ul {
+			text-align: left;
+		}
 	}

@@ -34,7 +34,7 @@
             <h1 style="padding:2% 5%;"><strong>Have Llama3.1 on your Local Machine</strong></h1>
            
 			<h4 style="color:rgb(0, 0, 0)">August 18, 2024</h4>
-            <span style="color:rgb(0, 0, 0)"><i>Got bored so let's earn how to deploy, quantize, and integrate Llama3.1 to your apps. All using your very own personal device</i></span>
+            <span style="color:rgb(0, 0, 0)"><i>Learn how to deploy, quantize, and integrate Llama3.1 to your apps. All using your very own personal device</i></span>
         </center>        
     </article>
 
@@ -182,7 +182,8 @@
 			<h3>Deep Learning Quantization</h3>
 
 			<p style="font-size: 100%;color: black;">
-				<strong>Deep Learning Quantization</strong> adalah teknik untuk mengurangi ukuran sizefile dari model Deep Learning dengan mengubah representasi parameter pada model tersebut. 
+				<strong>Deep Learning Quantization</strong> adalah teknik untuk mengurangi computational dan memory cost dari LLM dengan cara mereduksi ukuran model Deep Learning melalui perubahan representasi parameter pada model tersebut. 
+				Data parameter yang biasanya direpresentasikan oleh floating-point (contoh: <code>float32</code>) dikonversi atau direpresentasikan dalam tipe data dengan presisi lebih rendah (contoh: 8-bit integer <code>int8</code>)
 				Perlu diingat bahwa model Deep Learning tidak lain hanyalah sekumpulan matriks berisikan bilangan real. Jumlah parameter pada nama model mendeskripsikan banyaknya parameter yang mendeskripsikan model tersebut.
 				
 				<br><br>
@@ -221,26 +222,66 @@
 		
 		<br>
 		<p style="font-size: 100%;color: black;">
-			Tanpa quantization, berikut adalah ukuran model original dari Llama 3.1:
+			Tanpa quantization, berikut adalah besar VRAM GPU yang dibutuhkan untuk run model Llama 3.1 versi original 16-bit:
 
-			<table style="color:black;width:25rem;">
+			<table style="color:black;width:60vw;">
 				<tr style="font-weight: bold;">
 					<th scope="col">Model</th>
-					<th scope="col">Original Size (FP16)</th>
+					<th scope="col">VRAM Required</th>
 				</tr>
 				<tr>
 					<td scope="row">Llama 3.1-8B</td>
-					<td>~15.1 GB</td>
+					<td>14 GB</td>
 				</tr>
 				<tr>
 					<td scope="row">Llama 3.1-70B</td>
-					<td>~140.8 GB</td>
+					<td>168 GB</td>
 				</tr>
 				<tr>
 					<td scope="row">Llama 3.1-405B</td>
-					<td>~802.2 GB</td>
+					<td>972GB</td>
 				</tr>
-			  </table>
+			</table>
+
+		</p>	
+		<p style="font-size: 100%;color: black;">
+			Nilai diatas diperoleh melalui formula 
+			$$
+			M = \dfrac{P * 4B}{32/Q}*1.2
+			$$
+			<table>
+				<thead style="font-weight:bold;color:black;">
+				<tr>
+				<th>Symbol</th>
+				<th>Description</th>
+				</tr>
+				</thead>
+				<tbody style="color:black;"><tr>
+				<td>M</td>
+				<td>GPU memory expressed in Gigabyte</td>
+				</tr>
+				<tr>
+				<td>P</td>
+				<td>The amount of parameters in the model. E.g. a 7B model has 7 billion parameters.</td>
+				</tr>
+				<tr>
+				<td>4B</td>
+				<td>4 bytes, expressing the bytes used for each parameter</td>
+				</tr>
+				<tr>
+				<td>32</td>
+				<td>There are 32 bits in 4 bytes</td>
+				</tr>
+				<tr>
+				<td>Q</td>
+				<td>The amount of bits that should be used for loading the model. E.g. 16 bits, 8 bits or 4 bits.</td>
+				</tr>
+				<tr>
+				<td>1.2</td>
+				<td>Represents a 20% overhead of loading additional things in GPU memory.</td>
+				</tr>
+			</tbody></table>
+			<span>Referensi: <a href="https://www.substratus.ai/blog/calculating-gpu-memory-for-llm">URL</a></span>
 		</p>	
 
 		<p style="font-size: 100%;color: black;">
@@ -249,11 +290,126 @@
 		</p>	
 
 		<p style="font-size: 100%;color: black;">
-			Sekarang, hal pertama yang perlu Anda lakukan adalah mengunduh file model Llama yang diperlukan. Kali ini, kita akan menggunakan HuggingFace. 
+			Sekarang, hal pertama yang perlu Anda lakukan adalah mengunduh file model Llama yang diperlukan. Kali ini, kita akan menggunakan HuggingFace di <a href="https://huggingface.co/meta-llama/Meta-Llama-3.1-8B">laman berikut</a>. 
+			Setelah install prerequisitenya, run command <code>huggingface-cli download meta-llama/Meta-Llama-3.1-8B --include "original/*" --local-dir Meta-Llama-3.1-8B</code>.
+
+			<br>
+			Selepas itu, Anda akan mendapatkan folder <code>Meta-Llama-3.1-8B</code> dengan isi sebagai berikut.
+			<center>
+				<img src="images/llama3.1-comps.png" alt="Components llama3.1" width="600">
+				<P style="font-size: 100%; color:navy">Folder original berisikan model original <code>.pth</code>. Model HuggingFace terdiri dari file <code>.safetensors</code> dan config lainnya.</P>
+			</center>
+	
+		</p>	
+
+		<p style="font-size: 100%;color: black;">
+			Sekarang kita akan menggunakan <code>llama.cpp</code>. Clone repo dengan command <code>git clone https://github.com/ggerganov/llama.cpp.git</code>. Berikut adalah directory projectnya:
+			<center>
+				<img src="images/llama-dirproject.png" alt="Llama project directory" width="600">
+			</center>
+		</p>	
+
+		<p style="font-size: 100%;color: black;">
+			Setelah itu melalui Command Prompt, change directory ke folder <code>llama.cpp</code>. 
+			Sebelum menggunakan framework ini, Anda perlu build <code>llama.cpp</code> terlebih dahulu. Untuk stepnya, Anda dapat ikuti langkah pada <a href="https://github.com/ggerganov/llama.cpp/blob/master/docs/build.md">dokumentasi</a>
+			berikut. 
+
+			<br>
+			Lakukan instalasi file requirements.txt dengan <code>pip install -r requirements.txt</code> <strong>SEBELUM MEMULAI PROSES BUILD</strong>. Otherwise, banyak module tidak keinstall dengan proper dan 
+			jika Anda ga jago baca error log C/C++ you will spent hours debugging this one (Trust me, I did).
+
+			<p>Jika Anda ketemu error saat build <code>llama.cpp</code> dan banyak module yang tidak ke-build dengan proper, clean instalasi sebelumnya dengan <code>make clean</code>.</p>
+		</p>	
+
+
+		<p style="font-size: 100%;color: black;">
+			Framework <code>llama.cpp</code> hanya dapat mengenali model LLM dengan format <code>.gguf</code>. Setelah build selesai, convert file model dari HuggingFace tadi kedalam format <code>.gguf</code> dengan run command berikut:
+			<center>
+				<code>python .\convert_hf_to_gguf.py ..\Meta-Llama-3.1-8B</code>
+			</center>
+		</p>	
+
+		
+
+		<p style="font-size: 100%;color: black;">
+			Diperoleh hasil konversi sebagai berikut. File <code>.gguf</code> menggabungkan weight model dan semua konfigurasi kedalam satu file saja.
+			<center>
+				<img src="images/llama-convert-out.png" alt="Convert llama3.1" width="600">
+				<P style="font-size: 100%; color:navy">Diperoleh model <code>Meta-Llama-3.1-8B-F16.gguf</code>, menandakan format floating-point 16 bit.</P>
+			</center>
+		</p>	
+
+		<p style="font-size: 100%;color: black;">
+			Setelah itu, pindahhkan model yang sudah diconvert ke folder <code>llama.cpp/models</code>.
+		</p>	
+
+		<p style="font-size: 100%;color: black;">
+			Sampai di titik ini, kita sudah bisa melakukan inference Llama 3.1 dengan <code>llama.cpp</code>. Akan tetapi, ukuran model yang besar (14 GB) tentunya menjadi constraint yang berat bagi perangkat Anda.
+			Kita lakukan quantization dengan modul <code>llama-quantize</code> dari <code>llama.cpp</code>. Ikuti saja step disini karena dokumentasi di repo aslinya (<a href="https://github.com/ggerganov/llama.cpp/tree/master/examples/quantize">Link</a>) outdated.
+
+			<br><br>
+			Untuk melihat semua metode quantization yang tersedia, run command <code>llama-quantize</code> tanpa argumen. Pada kasus ini, kita akan quantize model tadi dengan method <code>Q4_0</code> melalui command berikut:
+			<center>
+				<code>llama-quantize models/Meta-Llama-3.1-8B-F16.gguf models/Meta-Llama-3.1-8B-Q4_0.gguf Q4_0</code>
+			</center>
+			<br>
+			<center>
+				<img src="images/quantize-process.png" alt="Quant process" width="900">
+				<P style="font-size: 100%; color:navy">Anda dapat memperhatikan shrink size dari tiap layer.</P>
+			</center>
+		</p>	
+
+		<p style="font-size: 100%;color: black;">
+			Hasil akhirnya, diperoleh model quantized dengan ukuran 4437.8 MB. Model ini lebih feasible untuk di-run pada PC kita yang resourcenya agak <i>kentang</i>. Untuk menentukan 
+			metode quantization yang paling tepat, perlu dilakukan banyak eksperimen karena setiap model <i>sweet spot</i>-nya belum tentu sama.
+
+			<br><br>
+			Selanjutnya dan tahap terakhir adalah untuk nge-run API melalui <code>llama-server</code> dengan command berikut:
+			<center>
+				<code>llama-server.exe -m models/Meta-Llama-3.1-8B-Q4_0.gguf -c 2048</code>
+			</center>
+
+			<span>Untuk dokumentasi lebih lengkap terkait <code>llama-server</code>, Anda dapat menuju <a href="https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md">laman berikut.</a></span>
+		</p>	
+
+		<p style="font-size: 100%;color: black;">
+			Command diatas akan memulai server yang secara default dapat diakses pada <code>127.0.0.1:8080</code>. Jika Anda akses URL tersebut, Anda dapat mengakses web console dari <code>llama.cpp</code>
+			sebagai berikut:
+			<center>
+				<img src="images/llama-web-ui.png" alt="Web UI" width="900">
+				<P style="font-size: 100%; color:navy">Here you can edit the temperature, prompt style, grammar details, and more from the model. Pretty convenient, huh?</P>
+			</center>
+		</p>	
+
+		
+		<p style="font-size: 100%;color: black;">
+			Anda juga dapat mengakses API melalui URL <code>http://127.0.0.1:8080/completion</code>. You're all set to integrate Local LLM to your apps!
+		</p>	
+
+		<h2>So.. what's next?</h2>
+
+		<p style="font-size: 100%;color: black;">
+			<ul style="font-size: 100%;color: black;">
+				<li>
+					Anda sekarang memiliki asisten pribadi seperti ChatGPT yang di run secara lokal tanpa perlu khawatir terkait dengan data yang Anda input kedalam LLM (<strong>Sayonara UU PDP hehehe</strong>).
+				</li>
+				<li>
+					Langkah selanjutnya adalah melakukan kustomisasi pada Llama untuk menyesuaikan dengan use-case yang Anda ingin bangun. Untuk memudahkan proses development, terdapat banyak pre-build 
+					<code>bindings</code> dari <code>llama.cpp</code> dengan bahasa pemrograman populer seperti Python, Node.js. Contohnya: <a href="https://github.com/abetlen/llama-cpp-python">Python Bindings</a>
+				</li>
+				<li>
+					Anda juga dapat mengintegrasikan <a href="https://python.langchain.com/v0.2/docs/integrations/llms/llamacpp/"><strong>LangChain</strong></a> framework untuk kustomisasi lebih lanjut.
+				</li>
+				<li>
+					<strong>The possibilities are endless</strong>. Selamat bermain - main !
+				</li>
+			</ul>
+			
+			
 		</p>	
 		
 		
-		huggingface-cli download meta-llama/Meta-Llama-3.1-8B --include "original/*" --local-dir Meta-Llama-3.1-8B
+		
 
 
 		<br>

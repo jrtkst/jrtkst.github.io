@@ -85,11 +85,12 @@
 
 					<div class="mt-6">
 						Beberapa waktu lalu, Meta baru saja merilis model LLM Open Source
-						terbarunya yaitu <strong>Llama 3.1</strong> dalam 3 ukuran (8B, 70B,
-						405B). Ketiga model juga hadir dalam versi <i>fine-tuned</i> untuk
-						model Instruct. Pada blog ini, kita akan berfokus pada model
-						<strong>Llama 3.1-8B</strong>. Anda tidak disarankan untuk bermain -
-						main dengan model 70B maupun 405B menggunakan PC pribadi (<i
+						terbarunya yaitu <span class="font-bold">Llama 3.1</span> dalam 3
+						ukuran (8B, 70B, 405B). Ketiga model juga hadir dalam versi
+						<i>fine-tuned</i> untuk model Instruct. Pada blog ini, kita akan
+						berfokus pada model <span class="font-bold">Llama 3.1-8B</span>.
+						Anda tidak disarankan untuk bermain - main dengan model 70B maupun
+						405B menggunakan PC pribadi (<i
 							><strong
 								>kalau daily driver PC Anda setara server baremetal sih
 								gapapa</strong
@@ -126,9 +127,9 @@
 						Kedua cara diatas punya kelebihan dan kekurangannya masing - masing.
 						Jika Anda ingin memiliki <i>ChatGPT like experience</i> pada PC Anda
 						secara cepat tanpa perlu ribet melakukan setup,
-						<strong>Ollama is the way to go</strong>. Jika Anda ingin
-						fleksibilitas atas model dan melakukan kustomisasi lebih lanjut,
-						opsi kedua lebih cocok untuk Anda. Tetapi penggunaan
+						<span class="font-bold">Ollama is the way to go</span>. Jika Anda
+						ingin fleksibilitas atas model dan melakukan kustomisasi lebih
+						lanjut, opsi kedua lebih cocok untuk Anda. Tetapi penggunaan
 						<code>llama.cpp</code> mengharuskan kita untuk mendownload model LLM
 						yang hendak digunakan terlebih dahulu secara manual.
 						<ul class="list-disc">
@@ -154,17 +155,17 @@
 
 							<br />
 							Kita akan mencoba untuk melakukan inference dan membangun
-							<strong>inference server</strong> menggunakan kedua tools
-							tersebut.
+							<span class="font-bold">inference server</span> menggunakan kedua
+							tools tersebut.
 						</h5>
 					</div>
 
 					<div class="font-bold text-xl mt-24">Ollama</div>
 					<div class="mt-6">
-						<strong>Ollama</strong> (short for Optimized Llama) adalah tools
-						yang dikembangkan untuk mempermudah user dalam pengembangan LLM di
-						perangkat pribadi Anda secara lokal. Dengan menggunakan Ollama, Anda
-						dapat memperoleh pengalaman.
+						<span class="font-bold">Ollama</span> (short for Optimized Llama)
+						adalah tools yang dikembangkan untuk mempermudah user dalam
+						pengembangan LLM di perangkat pribadi Anda secara lokal. Dengan
+						menggunakan Ollama, Anda dapat memperoleh pengalaman.
 					</div>
 
 					<div class="mt-6">
@@ -262,9 +263,9 @@
 
 						<br />
 						Kekurangan dari Ollama adalah:
-						<strong>Belum production ready</strong>. Ollama dibuat untuk
-						mempermudah user dalam melakukan eksperimen maupun development pada
-						perangkat consumer grade (sama seperti XAMPP)
+						<span class="font-bold">Belum production ready</span>. Ollama dibuat
+						untuk mempermudah user dalam melakukan eksperimen maupun development
+						pada perangkat consumer grade (sama seperti XAMPP)
 
 						<br />
 						Ollama sendiri menyatakan bahwa tools yang mereka bangun ini dibuat
@@ -289,19 +290,20 @@
 					<div class="text-xl font-bold mt-24">llama.cpp</div>
 
 					<div class="mt-6">
-						<strong>llama.cpp</strong> adalah framework yang dibangun dengan C++
-						bertujuan untuk implementasi model Llama untuk inferensi secara
-						cepat dan hemat memori dibandingkan dengan implementasi secara
-						langsung menggunakan Python. Tools Ollama yang sebelumnya kita bahas
-						pun dibangun diatas teknologi llama.cpp Sebelum lanjut, kita bahas
-						dulu soal <strong>Deep Learning Quantization</strong> secara
+						<span class="font-bold">llama.cpp</span> adalah framework yang
+						dibangun dengan C++ bertujuan untuk implementasi model Llama untuk
+						inferensi secara cepat dan hemat memori dibandingkan dengan
+						implementasi secara langsung menggunakan Python. Tools Ollama yang
+						sebelumnya kita bahas pun dibangun diatas teknologi llama.cpp
+						Sebelum lanjut, kita bahas dulu soal
+						<span class="font-bold">Deep Learning Quantization</span> secara
 						singkat.
 					</div>
 					<div class="mt-6 bg-blue-200 p-3 rounded">
 						<p style="font-size: 100%; color: black">
-							<strong>Deep Learning Quantization</strong> adalah teknik untuk
-							mengurangi computational dan memory cost dari LLM dengan cara
-							mereduksi ukuran model Deep Learning melalui perubahan
+							<span class="font-bold">Deep Learning Quantization</span> adalah
+							teknik untuk mengurangi computational dan memory cost dari LLM
+							dengan cara mereduksi ukuran model Deep Learning melalui perubahan
 							representasi parameter pada model tersebut. Data parameter yang
 							biasanya direpresentasikan oleh floating-point (contoh:
 							<code>float32</code>) dikonversi atau direpresentasikan dalam tipe
@@ -312,8 +314,11 @@
 							mendeskripsikan model tersebut.
 
 							<br /><br />
-							<strong>Contoh: </strong> Llama 3.1-<strong>8B</strong> memiliki
-							sekitar 8 Billions atau 8 miliar parameter
+							<span class="font-bold">Contoh: </span> Llama 3.1-<span
+								class="font-bold"
+								>8B</span
+							>
+							memiliki sekitar 8 Billions atau 8 miliar parameter
 
 							<br />
 							Model Llama 3.1 yang didistribusikan oleh Meta menggunakan tipe
@@ -492,10 +497,10 @@
 						<br />
 						Lakukan instalasi file requirements.txt dengan
 						<code>pip install -r requirements.txt</code>
-						<strong>SEBELUM MEMULAI PROSES BUILD</strong>. Otherwise, banyak
-						module tidak keinstall dengan proper dan jika Anda ga jago baca
-						error log C/C++ you will spent hours debugging this one (Trust me, I
-						did).
+						<span class="font-bold">SEBELUM MEMULAI PROSES BUILD</span>.
+						Otherwise, banyak module tidak keinstall dengan proper dan jika Anda
+						ga jago baca error log C/C++ you will spent hours debugging this one
+						(Trust me, I did).
 
 						<p>
 							Jika Anda ketemu error saat build <code>llama.cpp</code> dan
@@ -643,13 +648,13 @@
 								Anda juga dapat mengintegrasikan
 								<a
 									href="https://python.langchain.com/v0.2/docs/integrations/llms/llamacpp/"
-									><strong>LangChain</strong></a
+									><span class="font-bold">LangChain</span></a
 								>
 								framework untuk kustomisasi lebih lanjut.
 							</li>
 							<li>
-								<strong>The possibilities are endless</strong>. Selamat bermain
-								- main !
+								<span class="font-bold">The possibilities are endless</span>.
+								Selamat bermain - main !
 							</li>
 						</ul>
 					</div>

@@ -195,7 +195,7 @@ textarea,
 select {
 	font-family: "Roboto", "Open Sans", sans-serif;
 	line-height: 1.85em;
-	color: #888;
+	/* color: #888; */
 	font-weight: 300;
 	font-size: 13pt;
 }

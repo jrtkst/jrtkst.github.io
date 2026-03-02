@@ -1,97 +1,349 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 	<head>
-		<title>Gabriel Jonathan | Home</title>
+		<title>jrtkst.github.io</title>
 		<meta charset="utf-8" />
 		<meta
 			name="viewport"
 			content="width=device-width, initial-scale=1, user-scalable=no"
 		/>
+		<link rel="icon" href="images/hashtag_icon_240630.ico" />
 		<link rel="stylesheet" href="assets/css/main.css" />
-		<link rel="icon" href="images/icons8-sigma-64.ico" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script
+			src="https://code.jquery.com/jquery-3.7.1.slim.js"
+			integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc="
+			crossorigin="anonymous"
+		></script>
 		<link
 			href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
 			rel="stylesheet"
 		/>
 	</head>
-	<body class="is-preload">
-		<!-- Nav -->
-		<nav id="nav">
-			<ul class="navhome">
-				<li><a href="index.html">GABRIEL JONATHAN</a></li>
-			</ul>
-			<ul class="container">
-				<li><a href="profile.html">Profile</a></li>
-				<li><a href="works.html">Works</a></li>
-				<li><a href="blog.html">Blog</a></li>
-			</ul>
-		</nav>
-
-		<!-- Home -->
-		<article id="top" class="wrapper style1">
-			<div class="container">
-				<div class="row">
-					<div class="col-4 col-5-large col-12-medium">
-						<span class="image fit"
-							><img src="images/be_cropped.jpg" alt=""
-						/></span>
-					</div>
-					<div class="col-8 col-7-large col-12-medium">
-						<!-- <h3>Hi, My name is</h3> -->
-						<h3><strong>Gabriel Jonathan</strong></h3>
-
-						<h3 style="font-size: 115%; font-weight: 580">
-							Cyber Security Risk @<a href="https://www.bca.co.id/en/Individu"
-								>BCA</a
-							>
-							| Math, AI/ML, Tech Enjoyer
-						</h3>
-
-						<p style="font-size: 100%; font-weight: 580">
-							Math graduate from ITB with massive interest in Applied Math,
-							AI/ML Modelling, Cyber Security, and IT Risk Management.
-						</p>
-
-						<span style="font-weight: 600; color: #576cbc; font-size: 70%"
-							>gabejonathan29@gmail.com</span
-						>
+	<body class="min-h-screen bg-gray-800 text-gray-100 flex flex-col">
+		<header
+			class="fixed top-0 inset-x-0 z-50 border-b border-gray-800 backdrop-blur"
+		>
+			<div
+				class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center"
+			>
+				<div class="flex space-x-6 text-sm text-gray-400">
+					<a href="about.html" class="hover:text-emerald-400 transition"
+						>About</a
+					>
+					<a href="blog.html" class="hover:text-emerald-400 transition"
+						>Blogs</a
+					>
+				</div>
+				<div class="w-2/3">
+					<div class="font-semibold font-mono text-right">
+						<a
+							class="text-teal-500 hover:text-emerald-400 font-bold underline"
+							href="./index.html"
+							>jrtkst</a
+						>.<a
+							class="text-blue-500 hover:text-blue-400 underline"
+							href="https://github.com/jrtkst"
+							>github</a
+						>.io
 					</div>
 				</div>
 			</div>
-		</article>
+		</header>
 
-		<!-- Bottom Footer -->
-		<div class="navbar">
-			<a
-				href="https://www.instagram.com/jrtkst/"
-				class="icon brands fa-instagram"
-				><span></span
-			></a>
-			<a
-				href="mailto:gabejonathan29@gmail.com"
-				class="icon regular fa-envelope"
-			></a>
-			<a href="https://jrtkst.github.io/Resume_Gab.pdf" class="icon"
-				><span style="font-weight: 700; font-size: 125%">CV</span></a
+		<main class="pt-10">
+			<div class="max-w-6xl mx-auto px-10 md:px-6">
+				<div
+					class="text-lg font-thin text-teal-400 text-center font-bold hidden"
+					id="sha_msg"
+				>
+					SHA256(X|Y|TIME|TEXT)
+				</div>
+				<div
+					class="text-3xl font-bold text-center break-words break-all py-2 hidden"
+					id="coord_hash"
+				></div>
+				<div class="text-gray-400 text-center italic" id="initial_msg">
+					Move your pointer/click anywhere!
+				</div>
+			</div>
+
+			<div
+				class="pt-2 text-center flex flex-col mx-auto hidden"
+				id="toggle_area"
 			>
-			<a
-				href="https://www.linkedin.com/in/gabriel-jonathan/"
-				class="icon brands fa-linkedin-in"
-				><span class="label">LinkedIn</span></a
-			>
-			<a href="https://github.com/jrtkst" class="icon brands fa-github"
-				><span class="label">Github</span></a
-			>
+				<div class="flex flex-row object-top">
+					<div class="w-[30%] text-right font-mono">
+						<button
+							class="px-2 bg-emerald-600 font-bold rounded w-[40%] hover:bg-teal-700 transition-all"
+							id="x_btn"
+							onclick="xbtnhandler()"
+						>
+							X
+						</button>
+					</div>
+					<div class="w-1/2 text-left object-left pl-4">
+						<span id="x_coord">0</span>
+					</div>
+				</div>
+				<div class="flex flex-row object-top pt-1">
+					<div class="w-[30%] text-right font-mono">
+						<button
+							class="px-2 bg-emerald-600 font-bold rounded w-[40%] hover:bg-teal-700 transition-all"
+							onclick="ybtnhandler()"
+							id="y_btn"
+						>
+							Y
+						</button>
+					</div>
+					<div class="w-1/2 text-left object-left pl-4">
+						<span id="y_coord">0</span>
+					</div>
+				</div>
+				<div class="flex flex-row object-top py-1">
+					<div class="w-[30%] text-right font-mono">
+						<button
+							class="px-2 bg-emerald-600 font-bold rounded w-[40%] hover:bg-teal-700 transition-all"
+							id="time_btn"
+							onclick="timebtnhandler()"
+						>
+							TIME
+						</button>
+					</div>
+					<div class="w-1/2 text-left object-left pl-4" id="current_time"></div>
+				</div>
+				<div class="flex flex-row object-top">
+					<div class="w-[30%] text-right font-mono">
+						<button
+							class="px-2 bg-emerald-600 font-bold rounded w-[40%] hover:bg-teal-700 transition-all"
+							onclick="textbtnhandler()"
+							id="text_btn"
+						>
+							TEXT
+						</button>
+					</div>
+					<div class="w-1/2 text-left object-left pl-4">
+						<input
+							type="text"
+							class="px-2 w-3/4 text-gray-500 rounded"
+							id="text_input"
+						/>
+					</div>
+				</div>
+			</div>
+		</main>
+		<div
+			id="x_icon"
+			class="absolute font-mono text-blue-300 text-2xl font-bold pointer-events-none hidden"
+		>
+			X
 		</div>
+		<footer
+			class="fixed bottom-0 inset-x-0 z-50 border-t border-gray-800 bg-gray-800 backdrop-blur py-2"
+		>
+			<div
+				class="max-w-6xl px-6 flex flex-col sm:flex-row items-center justify-between text-sm text-gray-500"
+			>
+				<div class="space-x-6">
+					<a
+						href="https://www.linkedin.com/in/gabriel-jonathan/"
+						class="icon brands fa-linkedin-in"
+						><span class="label">LinkedIn</span></a
+					>
+					<a
+						href="https://www.instagram.com/jrtkst/"
+						class="icon brands fa-instagram"
+						><span></span
+					></a>
+				</div>
+			</div>
+		</footer>
 
-		<!-- Scripts -->
-		<script src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/jquery.scrolly.min.js"></script>
-		<script src="assets/js/browser.min.js"></script>
-		<script src="assets/js/breakpoints.min.js"></script>
-		<script src="assets/js/util.js"></script>
-		<script src="assets/js/main.js"></script>
+		<script>
+			// Default vars
+			var xCalc = true;
+			var yCalc = true;
+			var timeCalc = true;
+			var textCalc = true;
+			var textInput = "";
+			var xPos = 0;
+			var yPos = 0;
+			$("#text_input").on("input", async () => {
+				textInput = $("#text_input").val();
+				// Calculate hash too (only if textCalc = true)
+
+				if (textCalc) {
+					let theString = textInput;
+					if (xCalc) {
+						theString += xPos;
+					}
+					if (yCalc) {
+						theString += yPos;
+					}
+					if (timeCalc) {
+						theString += new Date();
+					}
+
+					let finalVars = await sha256(theString);
+
+					$("#coord_hash").text(finalVars);
+				}
+			});
+			const xbtnhandler = () => {
+				if (xCalc) {
+					xCalc = false;
+					$("#x_btn")
+						.removeClass("bg-emerald-600 hover:bg-teal-700")
+						.addClass("bg-gray-400 hover:bg-gray-300");
+				} else {
+					xCalc = true;
+					$("#x_btn")
+						.removeClass("bg-gray-400 hover:bg-gray-300")
+						.addClass("bg-emerald-600 hover:bg-teal-700");
+				}
+			};
+			const ybtnhandler = () => {
+				if (yCalc) {
+					yCalc = false;
+					$("#y_btn")
+						.removeClass("bg-emerald-600 hover:bg-teal-700")
+						.addClass("bg-gray-400 hover:bg-gray-300");
+				} else {
+					yCalc = true;
+					$("#y_btn")
+						.removeClass("bg-gray-400 hover:bg-gray-300")
+						.addClass("bg-emerald-600 hover:bg-teal-700");
+				}
+			};
+			const timebtnhandler = () => {
+				if (timeCalc) {
+					timeCalc = false;
+					$("#time_btn")
+						.removeClass("bg-emerald-600 hover:bg-teal-700")
+						.addClass("bg-gray-400 hover:bg-gray-300");
+				} else {
+					timeCalc = true;
+					$("#time_btn")
+						.removeClass("bg-gray-400 hover:bg-gray-300")
+						.addClass("bg-emerald-600 hover:bg-teal-700");
+				}
+			};
+			const textbtnhandler = () => {
+				if (textCalc) {
+					textCalc = false;
+					$("#text_btn")
+						.removeClass("bg-emerald-600 hover:bg-teal-700")
+						.addClass("bg-gray-400 hover:bg-gray-300");
+				} else {
+					textCalc = true;
+					$("#text_btn")
+						.removeClass("bg-gray-400 hover:bg-gray-300")
+						.addClass("bg-emerald-600 hover:bg-teal-700");
+				}
+			};
+
+			async function sha256(message) {
+				const msgUint8 = new TextEncoder().encode(message);
+				const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8);
+				const hashArray = Array.from(new Uint8Array(hashBuffer));
+				const hashHex = hashArray
+					.map((b) => b.toString(16).padStart(2, "0"))
+					.join("");
+				return hashHex;
+			}
+
+			async function clock() {
+				const today = new Date();
+
+				let current_time = today;
+
+				$("#current_time").html(current_time);
+				// Also update the hash
+
+				// Concat the vars | only update if timeCalc = true
+				// if (timeCalc) {
+				// 	let theString = "";
+				// 	theString += new Date();
+				// 	if (xCalc) {
+				// 		theString += xPos;
+				// 	}
+				// 	if (yCalc) {
+				// 		theString += yPos;
+				// 	}
+
+				// 	if (textCalc) {
+				// 		theString += textInput;
+				// 	}
+				// 	let finalVars = await sha256(theString);
+
+				// 	$("#coord_hash").text(finalVars);
+				// }
+				let theString = "";
+
+				if (xCalc) {
+					theString += xPos;
+				}
+				if (yCalc) {
+					theString += yPos;
+				}
+
+				if (textCalc) {
+					theString += textInput;
+				}
+				if (timeCalc) {
+					theString += new Date();
+				}
+				let finalVars = await sha256(theString);
+
+				$("#coord_hash").text(finalVars);
+
+				setTimeout(clock, 1000);
+			}
+			$(window).on("load", function () {
+				clock();
+			});
+			$(document).on("mousemove", async function (e) {
+				let mouseX = e.pageX;
+				let mouseY = e.pageY;
+				xPos = mouseX;
+				yPos = mouseY;
+				$("#x_coord").text(mouseX);
+				$("#y_coord").text(mouseY);
+
+				$("#x_icon").css({
+					left: e.pageX - 5 + "px",
+					top: e.pageY - 15 + "px",
+				});
+
+				$("#initial_msg").addClass("hidden");
+				$("#sha_msg").removeClass("hidden");
+				$("#toggle_area").removeClass("hidden");
+				$("#coord_hash").removeClass("hidden");
+				$("#x_icon").removeClass("hidden");
+
+				// Concat the vars | only change if either xCalc or yCalc
+				if (xCalc || yCalc) {
+					let theString = "";
+					if (xCalc) {
+						theString += mouseX;
+					}
+					if (yCalc) {
+						theString += mouseY;
+					}
+					if (timeCalc) {
+						theString += new Date();
+					}
+					if (textCalc) {
+						theString += textInput;
+					}
+
+					let finalVars = await sha256(theString);
+
+					$("#coord_hash").text(finalVars);
+				}
+			});
+		</script>
 	</body>
 </html>
